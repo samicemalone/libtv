@@ -52,7 +52,7 @@ EpisodeMatcher
 EpisodeMatcher matches a path, or a collection of paths, to the corresponding `EpisodeMatch`. When using a collection of paths, the episodes are expected to be for the same show and season.
 
 An episode can be considered a match if only an episode number is found. The show and season number will be present if found. For example:
-```
+```java
 # Match 24, season 1, episode 2
 Path p = Paths.get("24 - 1x02 - Name.mkv");
 EpisodeMatch m = new EpisodeMatcher().match(p);
@@ -75,7 +75,7 @@ By default, episode matching is deferred to the implementations of `TVMatcher.Ma
 
 Example (using default `TVMatcherOptions`):
 
-```
+```java
 # Throws MatchException
 Path p = Paths.get("Not.A.TV.Episode.avi");
 EpisodeMatch m = new TVMatcher().matchOrThrow(p);
@@ -94,7 +94,7 @@ m = new TVMatcher().matchElementOrThrow(p, TVMatcher.MatchElement.ALL);
 
 Example (using `TVMatcherOptions`):
 
-```
+```java
 Path p = Paths.get("The Pacific", "Season 1", "The Pacific - Part VIII.mkv");
 # Match The Pacific, no season, episode 8
 TVMatcherOptions o = new TVMatcherOptions();
@@ -131,7 +131,7 @@ Episode paths that contain more than one episode number are duplicated in map to
 
 TVMap uses a `Collection` -like interface but does not implement `Collection`. Some example methods:
 
-```
+```java
 # Assume a collection of shows "24", "Scrubs", "Friends"
 # with 2 seasons each, consisting of 12 episodes
 Collection<EpisodeMatch> matches = ...;
@@ -151,12 +151,12 @@ TV Show Case
 =========
 TV show case is variant of title case but makes exceptions to capitalise bracketed strings which are common for foreign TV show remakes. For example:
 
-```
+```java
 ShowCase.convert("the.office.(us)"); # The Office (US)
 ShowCase.convert("brooklyn nine-nine"); # Brooklyn Nine-Nine
 ShowCase.convert("two_and_a_half_men"); # Two and a Half Men
 ShowCase.convert("the IT crowd"); # The IT Crowd
-ShowCase.convert("house of cards (2013)"; ## House of Cards (2013)
+ShowCase.convert("house of cards (2013)"); ## House of Cards (2013)
 
 ```
 
