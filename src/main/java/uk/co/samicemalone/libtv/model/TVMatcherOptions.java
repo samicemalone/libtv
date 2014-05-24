@@ -69,7 +69,7 @@ public class TVMatcherOptions {
     }
     
     /**
-     * Create an instance of TVMatcherOptions. It defers matching the TV show
+     * Create an instance of TVMatcherOptions that defers matching the TV show
      * to the implementation of {@link TVMatcher.Matcher#match(java.nio.file.Path, java.lang.String)}
      * and defers matching the season to seasonMatcher
      * @param seasonMatcher SeasonMatcher for matching the season

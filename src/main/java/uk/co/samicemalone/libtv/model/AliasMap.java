@@ -34,9 +34,9 @@ import java.util.Map;
 /**
  * Creates a mapping of show names to their aliases.
  * For example:
- *   House of Cards -> House of Cards (2013)
- *   The Office -> The Office (US)
- *   IASIP -> It's Always Sunny in Philadelphia
+ *   House of Cards -&gt; House of Cards (2013)
+ *   The Office -&gt; The Office (US)
+ *   IASIP -&gt; It's Always Sunny in Philadelphia
  * @author Sam Malone
  */
 public class AliasMap {

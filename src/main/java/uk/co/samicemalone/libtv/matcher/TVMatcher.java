@@ -44,8 +44,9 @@ import uk.co.samicemalone.libtv.model.TVMatcherOptions;
 /**
  * TVMatcher matches an episode file path to an EpisodeMatch with the ability
  * to specify which TV show elements are required.
- * The episode matching is deferred to the implementations of {@link Matcher} in
- * {@link uk.co.samicemalone.libtv.matcher.tv}
+ * By default, episode matching is deferred to the implementations of {@link Matcher} in
+ * {@link uk.co.samicemalone.libtv.matcher.tv}.
+ * Matching can be deferred to a {@link TVMatcherOptions} instance
  * @author Sam Malone
  */
 public class TVMatcher {
