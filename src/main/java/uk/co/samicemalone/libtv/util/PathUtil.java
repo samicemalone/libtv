@@ -43,6 +43,10 @@ import java.util.List;
  */
 public class PathUtil {
     
+    private PathUtil() {
+        
+    }
+    
     /**
      * List the paths of all the files in the directory dir
      * @param dir directory path to list

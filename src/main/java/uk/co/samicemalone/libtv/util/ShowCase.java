@@ -115,4 +115,8 @@ public class ShowCase {
         }
         return String.join(" ", words);
     }
+
+    private ShowCase() {
+        
+    }
 }
