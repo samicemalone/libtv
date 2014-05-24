@@ -133,11 +133,28 @@ public class TVMatcher {
     /**
      * Match a file path to an episode to determine the episode number(s).
      * The show and season will be matched if found.
+     * Throws a MatchNotFoundException if an episode match was not found
+     * @param path path to match
+     * @return EpisodeMatch
+     * @throws uk.co.samicemalone.libtv.exception.MatchNotFoundException
+     * if an episode match was not found
+     */
+    public EpisodeMatch matchOrThrow(Path path) throws MatchNotFoundException {
+        EpisodeMatch e = match(path);
+        if(e == null) {
+            throw new MatchNotFoundException("Match not found: " + path);
+        }
+        return e;
+    }
+    
+    /**
+     * Match a file path to an episode to determine the episode number(s).
+     * The show and season will be matched if found.
      * Throws a MatchElementNotFoundException if an episode match was found
      * but the required match component wasn't e.g. no season.
      * @param path path to match
      * @param requiredMatch require the match to have the given MatchElement
-     * @return EpisodeMatch
+     * @return EpisodeMatch 
      * @throws uk.co.samicemalone.libtv.exception.MatchElementNotFoundException
      * if an episode match was found but the required match component was not.
      * @throws uk.co.samicemalone.libtv.exception.MatchNotFoundException
