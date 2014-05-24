@@ -53,13 +53,13 @@ EpisodeMatcher matches a path, or a collection of paths, to the corresponding `E
 
 An episode can be considered a match if only an episode number is found. The show and season number will be present if found. For example:
 ```java
-# Match 24, season 1, episode 2
+// Match 24, season 1, episode 2
 Path p = Paths.get("24 - 1x02 - Name.mkv");
 EpisodeMatch m = new EpisodeMatcher().match(p);
-# Match The Pacific, episode 4 (season EpisodeMatch.NO_SEASON)
+// Match The Pacific, episode 4 (season EpisodeMatch.NO_SEASON)
 p = Paths.get("The Pacific - Pt IV.mkv");
 m = new EpisodeMatcher().match(p);
-# Match 24, season 1, episode 5
+// Match 24, season 1, episode 5
 p = Paths.get("/path/to/TV/24/Season 1/");
 List<Path> l = PathUtil.listPaths(p, new VideoFilter());
 m = new EpisodeMatcher().match(l, 5);
@@ -76,19 +76,19 @@ By default, episode matching is deferred to the implementations of `TVMatcher.Ma
 Example (using default `TVMatcherOptions`):
 
 ```java
-# Throws MatchException
+// Throws MatchException
 Path p = Paths.get("Not.A.TV.Episode.avi");
 EpisodeMatch m = new TVMatcher().matchOrThrow(p);
-# Match The Pacific, no season, episode 8
+// Match The Pacific, no season, episode 8
 p = Paths.get("The Pacific - Part VIII.mkv");
 m = new TVMatcher().match(p);
-# m = null
+// m = null
 m = new TVMatcher().matchElement(p, TVMatcher.MatchElement.SEASON); 
-# Throws MatchElementNotFoundException
+// Throws MatchElementNotFoundException
 m = new TVMatcher().matchElementOrThrow(p, TVMatcher.MatchElement.SEASON);
-# Match The Pacific, no season, episode 8
+// Match The Pacific, no season, episode 8
 m = new TVMatcher().matchElementOrThrow(p, TVMatcher.MatchElement.SHOW); 
-# Throws MatchElementNotFoundException
+// Throws MatchElementNotFoundException
 m = new TVMatcher().matchElementOrThrow(p, TVMatcher.MatchElement.ALL);
 ```
 
@@ -96,13 +96,13 @@ Example (using `TVMatcherOptions`):
 
 ```java
 Path p = Paths.get("The Pacific", "Season 1", "The Pacific - Part VIII.mkv");
-# Match The Pacific, no season, episode 8
+// Match The Pacific, no season, episode 8
 TVMatcherOptions o = new TVMatcherOptions();
 EpisodeMatch m = new TVMatcher(o).match(p);
-# Match The Pacific, season 1, episode 8
+// Match The Pacific, season 1, episode 8
 TVMatcherOptions o = new TVMatcherOptions(new StandardTVElementMatcher());
 EpisodeMatch m = new TVMatcher(o).match(p);
-# Match The Pacific, season 1, episode 8
+// Match The Pacific, season 1, episode 8
 TVMatcherOptions o = new TVMatcherOptions().fallback(new StandardTVElementMatcher());
 EpisodeMatch m = new TVMatcher(o).match(p);
 ```
@@ -132,17 +132,17 @@ Episode paths that contain more than one episode number are duplicated in map to
 TVMap uses a `Collection` -like interface but does not implement `Collection`. Some example methods:
 
 ```java
-# Assume a collection of shows "24", "Scrubs", "Friends"
-# with 2 seasons each, consisting of 12 episodes
+// Assume a collection of shows "24", "Scrubs", "Friends"
+// with 2 seasons each, consisting of 12 episodes
 Collection<EpisodeMatch> matches = ...;
 TVMap map = new TVMap(matches);
-map.containsShow("24"); # true
-map.containsSeason("24", 1); # true
-map.contains("24", 1, 12); # true
-map.getEpisodes("24"); # Set of episodes for 24 (s01, s02 = 24)
-map.getSeasonEpisodes("24", 1)l # Set of 12 episodes for 24 s01
-map.getSeasonCount("24"); # 2
-map.getShowCount(); # 3
+map.containsShow("24"); // true
+map.containsSeason("24", 1); // true
+map.contains("24", 1, 12); // true
+map.getEpisodes("24"); // Set of episodes for 24 (s01, s02 = 24)
+map.getSeasonEpisodes("24", 1)l // Set of 12 episodes for 24 s01
+map.getSeasonCount("24"); // 2
+map.getShowCount(); // 3
 map.removeSeason("Scrubs", 1);
 map.removeShow("Friends");
 ```
@@ -152,11 +152,11 @@ TV Show Case
 TV show case is variant of title case but makes exceptions to capitalise bracketed strings which are common for foreign TV show remakes. For example:
 
 ```java
-ShowCase.convert("the.office.(us)"); # The Office (US)
-ShowCase.convert("brooklyn nine-nine"); # Brooklyn Nine-Nine
-ShowCase.convert("two_and_a_half_men"); # Two and a Half Men
-ShowCase.convert("the IT crowd"); # The IT Crowd
-ShowCase.convert("house of cards (2013)"); ## House of Cards (2013)
+ShowCase.convert("the.office.(us)"); // The Office (US)
+ShowCase.convert("brooklyn nine-nine"); // Brooklyn Nine-Nine
+ShowCase.convert("two_and_a_half_men"); // Two and a Half Men
+ShowCase.convert("the IT crowd"); // The IT Crowd
+ShowCase.convert("house of cards (2013)"); // House of Cards (2013)
 
 ```
 
