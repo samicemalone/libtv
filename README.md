@@ -8,7 +8,7 @@ Episode Filename Formats
 
 Before attempting to match an episode filename, common strings are removed that may cause false matches e.g. 1080p, ac3, h264 etc...
 
-Episode files may contain more than one episode number. See the Wiki for example multi-episode filenames supported.
+Episode files may contain more than one episode number. See the [Wiki](https://github.com/samicemalone/libtv/wiki/Episode-Naming-Formats) for example multi-episode filenames supported.
 
 Word separators (_- .) are interchangable to allow more flexibility in matching. Example matchable file names:
 
@@ -17,7 +17,7 @@ Word separators (_- .) are interchangable to allow more flexibility in matching.
   - show_name.101.mkv
   - show-name-pt-iv.mkv
 
-See the Wiki for more detailed naming formats
+See the [Wiki](https://github.com/samicemalone/libtv/wiki/Episode-Naming-Formats) for more detailed naming formats
 
 TV Paths
 ========
@@ -71,7 +71,7 @@ TVMatcher
 
 TVMatcher matches an episode file path to an EpisodeMatch with the ability to specify which TV show elements are required.
 
-By default, episode matching is deferred to the implementations of `TVMatcher.Matcher` in package `uk.co.samicemalone.libtv.matcher.tv`. Matching can be deferred to a `TVMatcherOptions` instance. See the Wiki for more information on the naming formats
+By default, episode matching is deferred to the implementations of `TVMatcher.Matcher` in package `uk.co.samicemalone.libtv.matcher.tv`. Matching can be deferred to a `TVMatcherOptions` instance. See the [Wiki](https://github.com/samicemalone/libtv/wiki/Episode-Naming-Formats) for more information on the naming formats
 
 Example (using default `TVMatcherOptions`):
 
@@ -140,7 +140,7 @@ map.containsShow("24"); // true
 map.containsSeason("24", 1); // true
 map.contains("24", 1, 12); // true
 map.getEpisodes("24"); // Set of episodes for 24 (s01, s02 = 24)
-map.getSeasonEpisodes("24", 1)l // Set of 12 episodes for 24 s01
+map.getSeasonEpisodes("24", 1); // Set of 12 episodes for 24 s01
 map.getSeasonCount("24"); // 2
 map.getShowCount(); // 3
 map.removeSeason("Scrubs", 1);

@@ -40,6 +40,13 @@ import uk.co.samicemalone.libtv.model.TVMatcherOptions;
  * Matches: (with variants of separators)
  * the pacific part i pilot.mkv
  * the.pacific.pt.i.pt.ii.pilot.mkv
+ * the_pacific_part1_name_part2_name.mkv
+ * the pacific part 2 name.mkv
+ * the pacific part2 name.mkv
+ * the.pacific.pt.2.name.mkv
+ * pt.ii.name.mkv
+ * part 2 name.mkv
+ * etc...
  * @author Sam Malone
  */
 public class PartMatcher extends TVGroupMatcher {
