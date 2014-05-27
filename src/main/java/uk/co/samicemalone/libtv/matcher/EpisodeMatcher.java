@@ -37,6 +37,7 @@ import uk.co.samicemalone.libtv.comparator.EpisodeNoComparator;
 import uk.co.samicemalone.libtv.model.EpisodeMatch;
 import uk.co.samicemalone.libtv.model.MatchCondition;
 import uk.co.samicemalone.libtv.model.Range;
+import uk.co.samicemalone.libtv.model.TVMatcherOptions;
 
 /**
  * EpisodeMatcher matches a path, or a list of paths, to episodes.
@@ -60,6 +61,14 @@ public class EpisodeMatcher {
      */
     public EpisodeMatcher() {
         this.tvMatcher = new TVMatcher();
+    }
+
+    /**
+     * Creates a new instance of EpisodeMatcher
+     * @param options options to use when matching
+     */
+    public EpisodeMatcher(TVMatcherOptions options) {
+        this.tvMatcher = new TVMatcher(options);
     }
     
     /**
