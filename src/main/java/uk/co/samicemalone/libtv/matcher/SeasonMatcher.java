@@ -38,7 +38,9 @@ import uk.co.samicemalone.libtv.model.EpisodeMatch;
 public interface SeasonMatcher {
     
     /**
-     * Match the season number using the absolute path given
+     * Match the season number using the absolute path given. If the path is
+     * a directory, it is assumed to be the episodes path. Otherwise the path is
+     * considered to be an episode.
      * @param path absolute path to match season from
      * @return season number or {@link EpisodeMatch#NO_SEASON}
      */

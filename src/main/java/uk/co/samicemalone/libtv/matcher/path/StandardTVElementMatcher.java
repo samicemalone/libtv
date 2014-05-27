@@ -28,6 +28,7 @@
  */
 package uk.co.samicemalone.libtv.matcher.path;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +63,7 @@ public class StandardTVElementMatcher implements TVElementMatcher {
 
     @Override
     public int matchSeason(Path episodePath) {
-        Path season = episodePath.getParent();
+        Path season = Files.isDirectory(episodePath) ? episodePath : episodePath.getParent();
         Path seasonName;
         if(season != null && (seasonName = season.getFileName()) != null) {
             return matchSeason(seasonName.toString());
