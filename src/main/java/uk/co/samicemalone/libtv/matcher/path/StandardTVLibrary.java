@@ -84,6 +84,11 @@ public class StandardTVLibrary extends TVPath {
         }
         return null;
     }
+
+    @Override
+    public TVElementMatcher getTVElementMatcher() {
+        return new StandardTVElementMatcher();
+    }
     
     /**
      * Create a new directory to store the episodes for the given show and season.

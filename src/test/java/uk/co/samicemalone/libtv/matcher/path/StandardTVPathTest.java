@@ -30,12 +30,13 @@ package uk.co.samicemalone.libtv.matcher.path;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import uk.co.samicemalone.libtv.FileSystemEnvironment;
 import uk.co.samicemalone.libtv.MockFileSystem;
-import uk.co.samicemalone.libtv.exception.EpisodePathNotFoundException;
+import uk.co.samicemalone.libtv.exception.EpisodesPathNotFoundException;
 import uk.co.samicemalone.libtv.model.Range;
 import uk.co.samicemalone.libtv.model.Season;
 import static uk.co.samicemalone.libtv.util.EpisodeTestUtil.assertSeasonEquals;
@@ -84,16 +85,36 @@ public class StandardTVPathTest extends FileSystemEnvironment {
 
     /**
      * Test of getSeason method, of class TVMatcher.
-     * @throws uk.co.samicemalone.libtv.exception.EpisodePathNotFoundException
+     * @throws uk.co.samicemalone.libtv.exception.EpisodesPathNotFoundException
      */
     @Test
-    public void testGetSeason() throws EpisodePathNotFoundException {
+    public void testGetSeason() throws EpisodesPathNotFoundException {
         String show = "Scrubs";
         int season = 1;
         StandardTVPath instance = new StandardTVPath(MockFileSystem.getMockRoot());
         Season expResult = new Season(season, instance.getEpisodesPath(show, season));
         Season result = instance.getSeason(show, season);
         assertSeasonEquals(expResult, result);
+    }
+    
+
+    /**
+     * Test of matchSeasons method, of class TVMatcher.
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testListSeasons() throws IOException {
+        String show = "Scrubs";
+        StandardTVPath instance = new StandardTVPath(MockFileSystem.getMockRoot());
+        List<Season> expResult = new ArrayList<>(MockFileSystem.NUM_SEASONS);
+        for(int i = 1; i <= MockFileSystem.NUM_SEASONS; i++) {
+            expResult.add(new Season(i, instance.getEpisodesPath(show, i)));
+        }
+        List<Season> result = instance.listSeasons(show);
+        assertEquals(expResult.size(), result.size());
+        for(int i = 0; i < result.size(); i++) {
+            assertSeasonEquals(expResult.get(i), result.get(i));
+        }
     }
 
     /**

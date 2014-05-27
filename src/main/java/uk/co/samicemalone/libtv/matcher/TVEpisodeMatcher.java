@@ -32,17 +32,14 @@ package uk.co.samicemalone.libtv.matcher;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import uk.co.samicemalone.libtv.DirectoryFilter;
-import uk.co.samicemalone.libtv.exception.EpisodePathNotFoundException;
-import uk.co.samicemalone.libtv.matcher.path.StandardTVElementMatcher;
-import uk.co.samicemalone.libtv.matcher.path.StandardTVPath;
+import uk.co.samicemalone.libtv.exception.EpisodesPathNotFoundException;
+import uk.co.samicemalone.libtv.matcher.path.TVPath;
 import uk.co.samicemalone.libtv.model.EpisodeMatch;
 import uk.co.samicemalone.libtv.model.EpisodeRange;
 import uk.co.samicemalone.libtv.model.Range;
 import uk.co.samicemalone.libtv.model.Season;
-import uk.co.samicemalone.libtv.util.PathUtil;
+import uk.co.samicemalone.libtv.model.TVMatcherOptions;
 
 /**
  * TVEpisodeMatcher can match TV episodes or sets of TV episodes in a variety
@@ -65,16 +62,25 @@ import uk.co.samicemalone.libtv.util.PathUtil;
  */
 public class TVEpisodeMatcher {
     
-    private final StandardTVPath tvPath;
+    private final TVPath tvPath;
     private final EpisodeMatcher episodeMatcher;
 
     /**
      * Create a new instance of TVEpisodeMatcher
-     * @param tvPath standard tv path used to find episodes 
+     * @param tvPath tv path used to find episodes 
      */
-    public TVEpisodeMatcher(StandardTVPath tvPath) {
+    public TVEpisodeMatcher(TVPath tvPath) {
         this.tvPath = tvPath;
         this.episodeMatcher = new EpisodeMatcher();
+    }
+
+    /**
+     * Create a new instance of TVEpisodeMatcher
+     * @param tvPath tv path used to find episodes 
+     */
+    public TVEpisodeMatcher(TVPath tvPath, TVMatcherOptions options) {
+        this.tvPath = tvPath;
+        this.episodeMatcher = new EpisodeMatcher(options);
     }
     
     /**
@@ -83,7 +89,7 @@ public class TVEpisodeMatcher {
      * @param season season number of episode to match
      * @param episode episode number to match
      * @return EpisodeMatch if found, otherwise null
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public EpisodeMatch matchEpisode(String show, int season, int episode) throws IOException  {
@@ -105,7 +111,7 @@ public class TVEpisodeMatcher {
      * @param show TV show
      * @param season season number to match largest episode
      * @return largest episode or null if no episode matches
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public EpisodeMatch matchLargestEpisode(String show, int season) throws IOException {
@@ -126,11 +132,11 @@ public class TVEpisodeMatcher {
      * in the latest season
      * @param show TV show
      * @return latest episode match or null if no episode matches
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public EpisodeMatch matchLatestEpisode(String show) throws IOException {
-        Season season = matchLargestSeason(matchSeasons(tvPath.getSeasonsPath(show)));
+        Season season = matchLargestSeason(tvPath.listSeasons(show));
         return episodeMatcher.matchLargest(tvPath.listPaths(season.getPath()));
     }
     
@@ -139,7 +145,7 @@ public class TVEpisodeMatcher {
      * @param show TV show
      * @param season season number to match episodes from
      * @return list of files matched or empty array if none found
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchSeason(String show, int season) throws IOException {
@@ -151,12 +157,12 @@ public class TVEpisodeMatcher {
      * @param show TV Show
      * @param range Range of seasons
      * @return list of files matched or empty array if none found
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchSeasonRange(String show, Range range) throws IOException {
         List<EpisodeMatch> matches = new ArrayList<>();
-        for(Season season : matchSeasons(tvPath.getSeasonsPath(show))) {
+        for(Season season : tvPath.listSeasons(show)) {
             if(range.contains(season.asInt())) {
                 matches.addAll(episodeMatcher.match(tvPath.listPaths(season.getPath())));
             }
@@ -169,7 +175,7 @@ public class TVEpisodeMatcher {
      * @param season Starting Season
      * @param show TV Show
      * @return list of files matched or empty array if none found
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchSeasonsFrom(String show, int season) throws IOException {
@@ -177,34 +183,14 @@ public class TVEpisodeMatcher {
     }
     
     /**
-     * Match the Seasons in the given seasons directory path
-     * @param seasonsPath path to the directory containing season directories
-     * @return list of seasons or empty list
-     * @throws EpisodePathNotFoundException if unable to find a season
-     * @throws IOException if unable to list any directories
-     */
-    public List<Season> matchSeasons(Path seasonsPath) throws IOException {
-        List<Season> seasons = new ArrayList<>();
-        DirectoryFilter f = new DirectoryFilter();
-        for(Path episodesPath : PathUtil.listPaths(seasonsPath, f)) {
-            int season = StandardTVElementMatcher.matchSeason(episodesPath.getFileName().toString());
-            if(season != EpisodeMatch.NO_SEASON) {
-                seasons.add(new Season(season, episodesPath));
-            }
-        }
-        Collections.sort(seasons);
-        return seasons;
-    }
-    
-    /**
      * Matches the largest season for the given show
      * @param show tv show
      * @return largest season or null if seasons is empty
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchLargestSeason(String show) throws IOException {
-        Season largest = matchLargestSeason(matchSeasons(tvPath.getSeasonsPath(show)));
+        Season largest = matchLargestSeason(tvPath.listSeasons(show));
         return episodeMatcher.match(tvPath.listPaths(largest.getPath()));
     }
     
@@ -232,7 +218,7 @@ public class TVEpisodeMatcher {
      * @param season season to match episodes
      * @param episode episode to start from in season
      * @return episode matches or empty list
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchEpisodesFrom(String show, int season, int episode) throws IOException {
@@ -244,7 +230,7 @@ public class TVEpisodeMatcher {
      * @param show TV Show
      * @param range EpisodeRange
      * @return List of episode matches in the given range or empty list
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchEpisodeRange(String show, EpisodeRange range) throws IOException {
@@ -268,7 +254,7 @@ public class TVEpisodeMatcher {
      * Match all the episodes from all the seasons of the given show
      * @param show TV Show
      * @return Episode List or empty array
-     * @throws EpisodePathNotFoundException if unable to find a season
+     * @throws EpisodesPathNotFoundException if unable to find a season
      * @throws IOException if unable to list any directories
      */
     public List<EpisodeMatch> matchAllEpisodes(String show) throws IOException {

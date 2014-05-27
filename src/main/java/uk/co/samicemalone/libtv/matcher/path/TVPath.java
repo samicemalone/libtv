@@ -32,9 +32,14 @@ package uk.co.samicemalone.libtv.matcher.path;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import uk.co.samicemalone.libtv.DirectoryFilter;
 import uk.co.samicemalone.libtv.VideoFilter;
-import uk.co.samicemalone.libtv.exception.EpisodePathNotFoundException;
+import uk.co.samicemalone.libtv.exception.EpisodesPathNotFoundException;
+import uk.co.samicemalone.libtv.exception.SeasonsPathNotFoundException;
+import uk.co.samicemalone.libtv.model.EpisodeMatch;
+import uk.co.samicemalone.libtv.model.Season;
 import uk.co.samicemalone.libtv.util.PathUtil;
 
 /**
@@ -48,7 +53,7 @@ public abstract class TVPath {
      * Get the path to the directory containing the season directories for the
      * given show
      * @param show TV show
-     * @return
+     * @return seasons path or null if not found
      */
     public abstract Path getSeasonsPath(String show);
 
@@ -57,22 +62,68 @@ public abstract class TVPath {
      * and season
      * @param show TV show
      * @param season season
-     * @return
+     * @return episodes path or null if not found
      */
     public abstract Path getEpisodesPath(String show, int season);
+    
+    /**
+     * Get a TVElementMatcher capable of matching TV elements (show/season)
+     * from an episode path using this TVPath directory structure. 
+     * @return TVElementMatcher
+     */
+    public abstract TVElementMatcher getTVElementMatcher();
+    
+    /**
+     * Get the Season for the given show and season if present
+     * @param show TV show
+     * @param season season number
+     * @return Season
+     * @throws EpisodesPathNotFoundException if unable to find the episodes path
+     */
+    public Season getSeason(String show, int season) throws EpisodesPathNotFoundException {
+        Path episodesPath = getEpisodesPath(show, season);
+        if(episodesPath == null) {
+            throw new EpisodesPathNotFoundException(show, season);
+        }
+        return new Season(season, episodesPath);
+    }    
+    
+    /**
+     * Match the Seasons in the given seasons directory path
+     * @param show TV show to list seasons for
+     * @return list of seasons or empty list
+     * @throws SeasonsPathNotFoundException if unable find the seasons directory
+     * @throws IOException if unable to list any directories
+     */
+    public List<Season> listSeasons(String show) throws IOException {
+        List<Season> seasons = new ArrayList<>();
+        DirectoryFilter filter = new DirectoryFilter();
+        Path path = getSeasonsPath(show);
+        if(path == null) {
+            throw new SeasonsPathNotFoundException(show);
+        }
+        for(Path episodesPath : PathUtil.listPaths(path, filter)) {
+            int season = getTVElementMatcher().matchSeason(episodesPath);
+            if(season != EpisodeMatch.NO_SEASON) {
+                seasons.add(new Season(season, episodesPath));
+            }
+        }
+        Collections.sort(seasons);
+        return seasons;
+    }
 
     /**
      * List the episode paths for the given TV show and season.
      * @param show TV show
      * @param season season
      * @return list of episode paths or empty list if none found
-     * @throws EpisodePathNotFoundException if unable to find the episodes path
+     * @throws EpisodesPathNotFoundException if unable to find the episodes path
      * @throws IOException if unable to list the directory contents
      */
     public List<Path> listPaths(String show, int season) throws IOException {
         Path p = getEpisodesPath(show, season);
         if(p == null) {
-            throw new EpisodePathNotFoundException(show, season);
+            throw new EpisodesPathNotFoundException(show, season);
         }
         return PathUtil.listPaths(p, new VideoFilter());
     }

@@ -35,14 +35,14 @@ import java.io.IOException;
  * Thrown when the path to episodes directory is not found
  * @author Sam Malone
  */
-public class EpisodePathNotFoundException extends IOException {
+public class EpisodesPathNotFoundException extends IOException {
 
-    public EpisodePathNotFoundException(String message) {
+    public EpisodesPathNotFoundException(String message) {
         super(message);
     }
     
-    public EpisodePathNotFoundException(String show, int season) {
-        super("Episode path could not be found for " + show + " - Season " + season);
+    public EpisodesPathNotFoundException(String show, int season) {
+        super("Episodes path could not be found for " + show + " - Season " + season);
     }
     
 }

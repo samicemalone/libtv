@@ -31,18 +31,16 @@ package uk.co.samicemalone.libtv.matcher;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.co.samicemalone.libtv.FileSystemEnvironment;
 import uk.co.samicemalone.libtv.MockFileSystem;
-import uk.co.samicemalone.libtv.exception.EpisodePathNotFoundException;
+import uk.co.samicemalone.libtv.exception.EpisodesPathNotFoundException;
 import uk.co.samicemalone.libtv.matcher.path.StandardTVPath;
 import uk.co.samicemalone.libtv.model.EpisodeMatch;
 import uk.co.samicemalone.libtv.model.EpisodeRange;
@@ -76,7 +74,7 @@ public class TVEpisodeMatcherTest extends FileSystemEnvironment {
      * Test of matchEpisode method, of class TVMatcher.
      * @throws java.io.IOException
      */
-    @Test(expected = EpisodePathNotFoundException.class)
+    @Test(expected = EpisodesPathNotFoundException.class)
     public void testMatchEpisodeThrow() throws IOException {
         tvMatcher.matchEpisode("Scrubs", 0, 1);
     }
@@ -100,7 +98,7 @@ public class TVEpisodeMatcherTest extends FileSystemEnvironment {
      * Test of matchLargestSeasonEpisode method, of class TVMatcher.
      * @throws java.io.IOException
      */
-    @Test(expected = EpisodePathNotFoundException.class)
+    @Test(expected = EpisodesPathNotFoundException.class)
     public void testMatchLargestEpisodeThrow() throws IOException {
         tvMatcher.matchLargestEpisode("Scrubs", 0);
     }
@@ -184,24 +182,6 @@ public class TVEpisodeMatcherTest extends FileSystemEnvironment {
     }
 
     /**
-     * Test of matchSeasons method, of class TVMatcher.
-     * @throws java.io.IOException
-     */
-    @Test
-    public void testMatchSeasons() throws IOException {
-        String show = "Scrubs";
-        List<Season> expResult = new ArrayList<>(MockFileSystem.NUM_SEASONS);
-        for(int i = 1; i <= MockFileSystem.NUM_SEASONS; i++) {
-            expResult.add(new Season(i, tvPath.getEpisodesPath(show, i)));
-        }
-        List<Season> result = tvMatcher.matchSeasons(tvPath.getSeasonsPath(show));
-        assertEquals(expResult.size(), result.size());
-        for(int i = 0; i < result.size(); i++) {
-            assertSeasonEquals(expResult.get(i), result.get(i));
-        }
-    }
-
-    /**
      * Test of matchLargestSeasonSeason method, of class TVMatcher.
      * @throws java.io.IOException
      */
@@ -224,10 +204,9 @@ public class TVEpisodeMatcherTest extends FileSystemEnvironment {
     @Test
     public void testMatchLargest() throws IOException {
         String show = "Scrubs";
-        Path seasonPath = tvPath.getSeasonsPath(show);
         int season = MockFileSystem.NUM_SEASONS;
         Season expResult = new Season(season, tvPath.getEpisodesPath(show, season));
-        Season result = tvMatcher.matchLargestSeason(tvMatcher.matchSeasons(seasonPath));
+        Season result = tvMatcher.matchLargestSeason(tvPath.listSeasons(show));
         assertSeasonEquals(expResult, result);
     }
 

@@ -32,9 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Formatter;
-import uk.co.samicemalone.libtv.exception.EpisodePathNotFoundException;
 import uk.co.samicemalone.libtv.exception.SeasonsPathNotFoundException;
-import uk.co.samicemalone.libtv.model.Season;
 
 /**
  * StandardTVPath models a standard TV directory structure.
@@ -130,20 +128,10 @@ public class StandardTVPath extends TVPath {
         }
         return null;
     }
-    
-    /**
-     * Get the Season for the given show and season if present
-     * @param show TV show
-     * @param season season number
-     * @return Season
-     * @throws EpisodePathNotFoundException if unable to find the episodes path
-     */
-    public Season getSeason(String show, int season) throws EpisodePathNotFoundException {
-        Path episodesPath = getEpisodesPath(show, season);
-        if(episodesPath == null) {
-            throw new EpisodePathNotFoundException(show, season);
-        }
-        return new Season(season, episodesPath);
+
+    @Override
+    public TVElementMatcher getTVElementMatcher() {
+        return new StandardTVElementMatcher();
     }
     
     /**
