@@ -131,6 +131,14 @@ public class EpisodeMatch extends AbstractTVEpisode {
     public List<Integer> getEpisodes() {
         return episodes;
     }
+    
+    /**
+     * Set the episodes in this match
+     * @param episodes episodes to set
+     */
+    public void setEpisodes(Collection<Integer> episodes) {
+        this.episodes = new ArrayList<>(episodes);
+    }
 
     /**
      * Get the episode File 
