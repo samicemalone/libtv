@@ -195,7 +195,7 @@ Copyright (c) 2014, Sam Malone. All rights reserved.
 
 Licensing
 =========
-The tv source code, binaries and man page are licensed under a BSD License.
+The libtv source code, binaries and documentation are licensed under a BSD License.
 See LICENSE for details.
 
 Author
