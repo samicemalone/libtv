@@ -123,6 +123,24 @@ TVEpisodeMatcher
 * Largest season number
 * All episodes
 
+EpisodeNavigator
+----------------
+`EpisodeNavigator` can be used to navigate to an episode via an offset. In other words, find the previous, current or next episode. For example:
+
+```java
+// assume TV path contains "24", seasons 1-8, 24 episodes per season
+Path tvRoot = Paths.get("/path/to/root/TV");
+StandardTVPath tvPath = new StandardTVPath(tvRoot);
+EpisodeNavigator nav = new EpisodeNavigator(new TVEpisodeMatcher(), tvPath);
+EpisodeMatch m = new EpisodeMatch("24", 1, 24); // 24 - s01e24
+// match next episode = 24 - s02e01
+m = nav.navigate(m, EpisodeNavigator.Pointer.NEXT);
+// match current episode = 24 -s02e01
+m = nav.navigate(m, EpisodeNavigator.Pointer.CUR);
+// match previous episode = 24 - s01e24
+m = nav.navigate(m, EpisodeNavigator.Pointer.PREV);
+```
+
 TV Map
 ===============
 `TVMap` creates a mapping between TV shows, seasons and episodes to allow for more efficient episode lookups.
