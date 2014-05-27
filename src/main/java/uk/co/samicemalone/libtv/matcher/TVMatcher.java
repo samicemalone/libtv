@@ -111,7 +111,7 @@ public class TVMatcher {
      * @param options TV matcher options
      */
     public TVMatcher(TVMatcherOptions options) {
-        this.options = options;
+        this.options = options == null ? new TVMatcherOptions() : options;
     }
     
     /**
