@@ -47,7 +47,7 @@ import static uk.co.samicemalone.libtv.util.EpisodeTestUtil.assertEpisodeMatchEq
  *
  * @author Sam Malone
  */
-public class EpisodeFileMatcherTest extends FileSystemEnvironment {
+public class EpisodeMatcherTest extends FileSystemEnvironment {
     
     private EpisodeMatcher episodeMatcher;
     
