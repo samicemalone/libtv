@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2014, Sam Malone. All rights reserved.
  *
  * Redistribution and use of this software in source and binary forms, with or
@@ -26,52 +26,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package uk.co.samicemalone.libtv.matcher.tv;
 
-import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import uk.co.samicemalone.libtv.model.EpisodeMatch;
-import uk.co.samicemalone.libtv.model.TVMatcherOptions;
-import uk.co.samicemalone.libtv.util.StringUtil;
+package uk.co.samicemalone.libtv.util;
 
 /**
- * Matches: (with variants of separators)
- * the.league 101 pilot.mkv
- * the.league 1.01 pilot.mkv
+ *
  * @author Sam Malone
  */
-public class NoDelimiterMatcher extends TVGroupMatcher {
-
-    private final String separator = "[_\\-. +]*";
-    private final String yearRegex = "(19|20)?\\d\\d";
-    private final String dateRegex = StringUtil.join(separator, 
-        yearRegex,"\\d\\d", "\\d\\d|\\d\\d", "\\d\\d", yearRegex, "|(19|20)\\d\\d"
-    );
-    private final Pattern pattern = Pattern.compile(
-        "^(.*)"+separator+"(\\d+)"+separator+"(\\d\\d)", Pattern.CASE_INSENSITIVE
-    );
+public class StringUtil {
+    
+    private StringUtil() {
         
-    public NoDelimiterMatcher(TVMatcherOptions options) {
-        super(options);
     }
     
-    @Override
-    public EpisodeMatch match(Path path, String filteredFileName) {
-        Matcher showMatcher = pattern.matcher(filteredFileName);
-        if(showMatcher.find()) {
-            String show = matchShow(path, showMatcher.toMatchResult(), 1);
-            if(show != null) {
-                show = show.replaceAll(separator + '$', "");
+    /**
+     * Returns a new String composed of copies of the
+     * {@code String elements} joined together with a copy of
+     * the specified {@code delimiter}.
+     *
+     * <blockquote>For example,
+     * <pre>{@code
+     *     String message = StringUtil.join("-", "Java", "is", "cool");
+     *     // message returned is: "Java-is-cool"
+     * }</pre></blockquote>
+     * @param delimiter the delimiter that separates each element
+     * @param elements the elements to join together.
+     * @return 
+     */
+    public static String join(String delimiter, String... elements) {
+        StringBuilder builder = new StringBuilder();
+        int size = elements.length;
+        for(int i = 0; i < size; i++) {
+            builder.append(elements[i]);
+            if(i + 1 >= size) {
+                break;
             }
-            Matcher m = pattern.matcher(filteredFileName.replaceAll(dateRegex, ""));
-            if(m.find()) {
-                int season = matchSeason(path, m.toMatchResult(), 2);
-                int episode = Integer.valueOf(m.group(3));
-                return new EpisodeMatch(show, season, episode);
-            }
+            builder.append(delimiter);
         }
-        return null;
+        return builder.toString();
     }
-
+    
 }

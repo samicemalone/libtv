@@ -113,7 +113,7 @@ public class ShowCase {
                 }
             }
         }
-        return String.join(" ", words);
+        return StringUtil.join(" ", words);
     }
 
     private ShowCase() {
