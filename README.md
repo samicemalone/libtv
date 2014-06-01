@@ -175,7 +175,6 @@ ShowCase.convert("brooklyn nine-nine"); // Brooklyn Nine-Nine
 ShowCase.convert("two_and_a_half_men"); // Two and a Half Men
 ShowCase.convert("the IT crowd"); // The IT Crowd
 ShowCase.convert("house of cards (2013)"); // House of Cards (2013)
-
 ```
 
 Comparators
