@@ -123,6 +123,11 @@ public class Range implements Iterable<Integer>, Iterator<Integer> {
     }
 
     @Override
+    public void remove() {
+        throw new UnsupportedOperationException("Removing from range not supported");
+    }
+
+    @Override
     public String toString() {
         return String.format("%d - %d", start, end);
     }
