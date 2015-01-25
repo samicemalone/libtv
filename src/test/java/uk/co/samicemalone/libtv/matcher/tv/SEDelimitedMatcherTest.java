@@ -67,6 +67,17 @@ public class SEDelimitedMatcherTest {
         }
     }
     
+    @Test
+    public void testMatchAmbiguous() {
+        String fileName = "helix.s01e01.pilot.mkv";
+        System.out.println(TVMatcher.stripCommonTags(fileName));
+        SEDelimitedMatcher instance = new SEDelimitedMatcher(new TVMatcherOptions());
+        EpisodeMatch expResult = new EpisodeMatch("Helix", 1, 1);
+        Path p = Paths.get(path, fileName);
+        EpisodeMatch result = instance.match(p, TVMatcher.stripCommonTags(fileName));
+        assertEpisodeMatchEquals(expResult, result);
+    }
+    
     /**
      * Test of matchShow method, of class SEDelimitedMatcher.
      */

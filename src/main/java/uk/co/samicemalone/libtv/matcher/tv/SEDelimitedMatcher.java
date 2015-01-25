@@ -56,7 +56,7 @@ public class SEDelimitedMatcher extends TVGroupMatcher {
     private final static String separator = "[_\\-. +x]*";
 
     private final static Pattern pattern = Pattern.compile(
-        "^(.*?)"+separator+"s(\\d+)"+separator+"e(\\d+)"+separator
+        "^(.*?)"+"[_\\-. +]*"+"s(\\d+)"+separator+"e(\\d+)"+separator
             + "((?:(?:(?:.*?)s(?:\\d+)"+separator+")?e\\d+"+separator+")*)",
         Pattern.CASE_INSENSITIVE
     );
