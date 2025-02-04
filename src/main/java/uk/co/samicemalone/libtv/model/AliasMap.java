@@ -30,6 +30,7 @@ package uk.co.samicemalone.libtv.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import uk.co.samicemalone.libtv.util.StringUtil;
 
 /**
  * Creates a mapping of show names to their aliases.
@@ -40,8 +41,10 @@ import java.util.Map;
  * @author Sam Malone
  */
 public class AliasMap {
-    
+
     private final Map<String, String> aliasMap;
+    
+    private boolean alnumCompare = true;
 
     /**
      * Creates a new empty instance of AliasMap
@@ -49,6 +52,16 @@ public class AliasMap {
     public AliasMap() {
         aliasMap = new HashMap<>();
     }
+
+    /**
+     * Creates a new empty instance AliasMap
+     * @param alnumCompare true if 
+     */
+    public AliasMap(boolean alnumCompare) {
+        this();
+        this.alnumCompare = alnumCompare;
+    }
+    
     
     /**
      * Add an alias for the given show
@@ -57,6 +70,7 @@ public class AliasMap {
      * @return this instance
      */
     public AliasMap addAlias(String show, String alias) {
+        show = formatShow(show);
         if(!aliasMap.containsKey(show)) {
             aliasMap.put(show, alias);
         }
@@ -69,7 +83,7 @@ public class AliasMap {
      * @return true if the TV show has an alias, false otherwise
      */
     public boolean hasAlias(String show) {
-        return aliasMap.containsKey(show);
+        return aliasMap.containsKey(formatShow(show));
     }
     
     /**
@@ -78,7 +92,11 @@ public class AliasMap {
      * @return TV show alias or null if show alias not present
      */
     public String getShowAlias(String show) {
-        return aliasMap.get(show);
+        return aliasMap.get(formatShow(show));
     }
     
+    private String formatShow(String show) {
+        return alnumCompare ? StringUtil.retainAlnum(show) : show;
+    }
+
 }

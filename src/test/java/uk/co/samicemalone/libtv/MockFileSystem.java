@@ -45,7 +45,8 @@ import uk.co.samicemalone.libtv.model.Range;
 public class MockFileSystem {
     
     private final static String[] shows = new String[] {
-        "Scrubs", "Friends", "Modern Family", "The Office (US)"
+        "Scrubs", "Friends", "Modern Family", "The Office (US)",
+        "It's Always Sunny In Philadelphia"
     };
     
     private final static File MOCK_ROOT = new File("mockroot_tv");

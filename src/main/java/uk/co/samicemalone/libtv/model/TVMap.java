@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import uk.co.samicemalone.libtv.util.StringUtil;
 
 /**
  * TVMap creates a mapping between shows, seasons and episodes to allow for
@@ -65,13 +66,13 @@ public class TVMap {
         this();
         addEpisodes(episodes);
     }
-    
+
     /**
      * Add an episode to the map.
      * @param e episode to add
      */
     public void addEpisode(EpisodeMatch e) {
-        String show = e.getShow().toLowerCase();
+        String show = StringUtil.retainAlnum(e.getShow());
         if(!tvMap.containsKey(show)) {
             showMap.put(show, e.getShow());
             tvMap.put(show, new HashMap<Integer, Map<Integer, EpisodeMatch>>());
@@ -115,7 +116,7 @@ public class TVMap {
      * @return true if found, false otherwise
      */
     public boolean contains(String show, int season, int episode) {
-        show = show.toLowerCase();
+        show = StringUtil.retainAlnum(show);
         return  tvMap.containsKey(show) &&
                 tvMap.get(show).containsKey(season) &&
                 tvMap.get(show).get(season).containsKey(episode);
@@ -127,7 +128,7 @@ public class TVMap {
      * @return true if found, false otherwise
      */
     public boolean containsShow(String show) {
-        return tvMap.containsKey(show.toLowerCase());
+        return tvMap.containsKey(StringUtil.retainAlnum(show));
     }
     
     /**
@@ -137,7 +138,7 @@ public class TVMap {
      * @return true if found, false otherwise
      */
     public boolean containsSeason(String show, int season) {
-        show = show.toLowerCase();
+        show = StringUtil.retainAlnum(show);
         return tvMap.containsKey(show) && tvMap.get(show).containsKey(season);
     }
     
@@ -155,7 +156,7 @@ public class TVMap {
      * @return set of seasons in the map or empty set
      */
     public Set<Integer> getSeasons(String show) {
-        return containsShow(show) ? new HashSet<>(tvMap.get(show.toLowerCase()).keySet()) : new HashSet<Integer>();
+        return containsShow(show) ? new HashSet<>(tvMap.get(StringUtil.retainAlnum(show)).keySet()) : new HashSet<Integer>();
     }
     
     /**
@@ -164,7 +165,7 @@ public class TVMap {
      * @return set of episodes in the map for the given show or empty set
      */
     public Set<EpisodeMatch> getEpisodes(String show) {
-        show = show.toLowerCase();
+        show = StringUtil.retainAlnum(show);
         Set<EpisodeMatch> set = new HashSet<>();
         if(tvMap.containsKey(show)) {
             for(int season : tvMap.get(show).keySet()) {
@@ -182,7 +183,7 @@ public class TVMap {
      * @return episode or null if not present
      */
     public EpisodeMatch getEpisode(String show, int season, int episode) {
-        return contains(show, season, episode) ? tvMap.get(show.toLowerCase()).get(season).get(episode) : null;
+        return contains(show, season, episode) ? tvMap.get(StringUtil.retainAlnum(show)).get(season).get(episode) : null;
     }
     
     /**
@@ -210,7 +211,7 @@ public class TVMap {
      * @return number of seasons in the map for the given show.
      */
     public int getSeasonCount(String show, boolean includeNoSeason) {
-        show = show.toLowerCase();
+        show = StringUtil.retainAlnum(show);
         int count = 0;
         if(tvMap.containsKey(show) && !tvMap.get(show).isEmpty()) {
             for(int season : tvMap.get(show).keySet()) {
@@ -233,7 +234,7 @@ public class TVMap {
      */
     public Set<EpisodeMatch> getSeasonEpisodes(String show, int season) {
         Set<EpisodeMatch> set = new HashSet<>();
-        show = show.toLowerCase();
+        show = StringUtil.retainAlnum(show);
         if(tvMap.containsKey(show) && tvMap.get(show).containsKey(season)) {
             set.addAll(tvMap.get(show).get(season).values());
         }
@@ -246,7 +247,7 @@ public class TVMap {
      * @return episode or null
      */
     private EpisodeMatch getEpisode(EpisodeMatch e) {
-        String show = e.getShow().toLowerCase();
+        String show = StringUtil.retainAlnum(e.getShow());
         return contains(e) ? tvMap.get(show).get(e.getSeason()).get(e.getEpisode()) : null;
     }
     
@@ -286,7 +287,7 @@ public class TVMap {
      */
     public void removeSeason(String show, int season) {
         if(containsShow(show)) {
-            show = show.toLowerCase();
+            show = StringUtil.retainAlnum(show);
             tvMap.get(show).remove(season);
             cleanEmptyShow(show);
         }
@@ -297,7 +298,7 @@ public class TVMap {
      * @param show TV show to remove
      */
     public void removeShow(String show) {
-        show = show.toLowerCase();
+        show = StringUtil.retainAlnum(show);
         if(tvMap.containsKey(show)) {
             showMap.remove(show);
             tvMap.remove(show);
@@ -310,7 +311,7 @@ public class TVMap {
      */
     public void removeEpisode(EpisodeMatch episode) {
         if(contains(episode)) {
-            String show = episode.getShow().toLowerCase();
+            String show = StringUtil.retainAlnum(episode.getShow());
             Map<Integer, EpisodeMatch> seasonEpisodes = tvMap.get(show).get(episode.getSeason());
             for(int episodeNo : episode.getEpisodes()) {
                 seasonEpisodes.remove(episodeNo);
@@ -333,7 +334,7 @@ public class TVMap {
             }
             removeEpisode(cacheEp);
             EpisodeMatch newEp = new EpisodeMatch(cacheEp);
-            newEp.getEpisodes().remove(new Integer(singleEp.getEpisode()));
+            newEp.getEpisodes().remove(Integer.valueOf(singleEp.getEpisode()));
             if(!newEp.getEpisodes().isEmpty()) {
                 addEpisode(newEp);
             }

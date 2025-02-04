@@ -84,11 +84,11 @@ public class RangeTest {
         int i = 1;
         Iterator<Integer> result = new Range(1, 3).iterator();
         assertTrue(result.hasNext());
-        assertEquals(new Integer(i++), result.next());
+        assertEquals(Integer.valueOf(i++), result.next());
         assertTrue(result.hasNext());
-        assertEquals(new Integer(i++), result.next());
+        assertEquals(Integer.valueOf(i++), result.next());
         assertTrue(result.hasNext());
-        assertEquals(new Integer(i++), result.next());
+        assertEquals(Integer.valueOf(i++), result.next());
         assertFalse(result.hasNext());
     }
 
@@ -114,7 +114,7 @@ public class RangeTest {
         Range instance = new Range(1, 3);
         Iterator<Integer> it = instance.iterator();
         for(int i = 1; i <= 3; i++) {
-            assertEquals(new Integer(i), it.next());
+            assertEquals(Integer.valueOf(i), it.next());
         }
     }
     

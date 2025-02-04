@@ -66,4 +66,8 @@ public class StringUtil {
         return builder.toString();
     }
     
+    public static String retainAlnum(String str) {
+        return str.toLowerCase().replaceAll("[^A-Za-z0-9]", "");
+    }
+    
 }
